@@ -325,7 +325,6 @@ module Render{
     			}
     		}
 
-
     		// Draw debug for every elements
     		if(debugMode.active){
     			for (var k = _elements.length - 1; k >= 0; k--) {

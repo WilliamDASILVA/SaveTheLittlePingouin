@@ -5,6 +5,7 @@ module Update{
 
 	var worldToUpdate = null;
 	var cameraToUpdate = null;
+	var useFPS = true;
 	var functionsToCallWhenUpdate = [];
 
 	/*	--------------------------------------------------- *\
@@ -59,7 +60,12 @@ module Update{
         }
         
         var dt = t !== undefined && lastTime !== undefined ? t / 1000 - lastTime : 0;
-        worldToUpdate.step(timeStep, dt, maxSubSteps);
+        if(useFPS){
+        	worldToUpdate.step(timeStep);
+        }
+        else{
+        	worldToUpdate.step(timeStep, dt, maxSubSteps);
+        }
         lastTime = t / 1000;
 	}
 

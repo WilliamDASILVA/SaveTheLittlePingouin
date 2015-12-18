@@ -18,9 +18,11 @@ class Elements extends p2.Body{
     datas: any[];
     static: boolean;
     shapeAngle: number;
+    depth: number;
 
     canCollide: string[];
     colGroup: number;
+    isSensor: boolean;
 
     /*    --------------------------------------------------- *\
             [function] constructor()
@@ -45,10 +47,13 @@ class Elements extends p2.Body{
         this.datas = [];
         this.canCollide = [];
 
+        this.isSensor = false;
+
         this.haveCollision = false;
         this.colGroup = 0;
         this.eType = "";
         this.shapeAngle = 0;
+        this.depth = 0;
 
         this.static = isStatic || false;
 
@@ -56,6 +61,21 @@ class Elements extends p2.Body{
             _elements.push(this);
         }
 
+    }
+    /*    --------------------------------------------------- *\
+            [function] getDepth()
+    
+            * Retourne la profondeur de champ *
+    
+            Return: depth
+    \*    --------------------------------------------------- */
+    getDepth(){
+        return this.depth;
+    }
+
+
+    setDepth(depth:number){
+        this.depth = depth;
     }
 
     /*    --------------------------------------------------- *\
@@ -117,7 +137,9 @@ class Elements extends p2.Body{
 
         if(this.shapes[0]){
             this.shapes[0].collisionMask = mask;
-            this.shapes[0].sensor = false;
+            if (!this.isSensor){
+                this.shapes[0].sensor = false;
+            }
         }
     }
 
@@ -134,7 +156,8 @@ class Elements extends p2.Body{
         
         if(this.getAssignedDrawables() != 0){
             for (var i = 0; i < this.getAssignedDrawables().length; ++i) {
-                this.getAssignedDrawables()[i].setPosition(x, y);
+                var offset = this.getAssignedDrawables()[i].getOffset();
+                this.getAssignedDrawables()[i].setPosition(x + offset.x, y + offset.y);
             }
         }
 

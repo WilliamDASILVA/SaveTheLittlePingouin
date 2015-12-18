@@ -69,7 +69,7 @@ module Render{
         del(element : any){
             for (var i = this.elements.length - 1; i >= 0; i--) {
                 if(this.elements[i] == element){
-                    this.elements[i].setVisible(false);
+                    this.elements.splice(i, 1);
                     delete this.elements[i];
                 }
             }

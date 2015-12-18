@@ -21,6 +21,7 @@ module Render{
         visible: boolean;
         layout: any;
         smooth: boolean;
+        offset: any;
 
 		/*	--------------------------------------------------- *\
 				[function] constructor(texture, x, y, width, height)
@@ -57,6 +58,29 @@ module Render{
             this.rotationPoint = { x: 0, y: 0 };
             this.visible = true;
             this.smooth = true;
+            this.offset = { x: 0, y: 0 };
+		}
+
+		/*	--------------------------------------------------- *\
+				[function] getOffset()
+		
+				* Return the offset *
+		
+				Return: x, y
+		\*	--------------------------------------------------- */
+		getOffset(){
+			return this.offset;
+		}
+
+		/*	--------------------------------------------------- *\
+				[function] setOffset(x, y)
+		
+				* Set the offset *
+		
+				Return: true, false
+		\*	--------------------------------------------------- */
+		setOffset(x, y){
+			this.offset = { x: x, y: y };
 		}
 
 		/*	--------------------------------------------------- *\

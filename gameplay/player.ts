@@ -1,21 +1,54 @@
 class Player extends Elements{
+	private health: number;
+	private size: any;
+
 	constructor(world : any){
-		super(10, false);
+		super(100, false);
 
 		this.setType("player");
-		this.canCollideWith("ground");
+		this.canCollideWith("ground", "ennemy", "endFlag");
 		this.setFixedRotation(true);
 
-		var shape = new p2.Box({ width: 50, height: 50 });
+		this.size = { width: 120, height: 92 };
+
+		this.health = 100; 
+
+		var texture = new Render.Texture("assets/spriter/walking_pingouin.png");
+		var sprite = new Render.Sprite(texture, 0, 0, this.size.width, this.size.height, 78, 59, 20, 0);
+		sprite.setFrameSpeed(60);
+		this.assignDrawable(sprite);
+
+		var shape = new p2.Box(this.size);
 		this.addShape(shape);
 
-		var texture = new Render.Draw.Rectangle(0, 0, 50, 50);
-		texture.setColor("#00FF00");
-		this.assignDrawable(texture);
+		this.setDepth(1000);
+
 
 
 		if(world){
 			world.addBody(this);
 		}
+	}
+
+	takeHealth(value :number){
+		if (this.health - value <= 0) {
+			this.health = 0;
+			console.log("DEAD");
+		}
+		else{
+			this.health = this.health - value;
+		}
+	}
+
+	addHealth(value : number){
+		this.health = this.health + value;
+	}
+
+	getHealth(){
+		return this.health;
+	}
+
+	resetLocalStats(){
+		this.health = 100;
 	}
 }

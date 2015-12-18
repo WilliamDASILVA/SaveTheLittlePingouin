@@ -36,25 +36,31 @@
 
 /// <reference path="../gameplay/ground.ts" />
 /// <reference path="../gameplay/player.ts" />
+/// <reference path="../gameplay/obstacle.ts" />
+/// <reference path="../gameplay/ennemy.ts" />
+/// <reference path="../gameplay/endFlag.ts" />
+/// <reference path="../gameplay/mapLoading.ts" />
+/// <reference path="../gameplay/background.ts" />
 
 /// <reference path="../gameplay/behaviours/playerBehaviour.ts" />
+/// <reference path="../gameplay/behaviours/cameraBehaviour.ts" />
+/// <reference path="../gameplay/behaviours/scoreBehaviour.ts" />
+
 
 
 /*    --------------------------------------------------- *\
         Game
 \*    --------------------------------------------------- */
 var mainCanvas = new Render.Layer();
+mainCanvas.setSmooth(false);
 mainCanvas.affectedByCamera = true;
 var interfaceCanvas = new Render.Layer();
 /*    --------------------------------------------------- *\
         Main file
 \*    --------------------------------------------------- */
-if(Global.isAndroid()){
-    document.addEventListener("deviceready", startApp);
-}
-else{
-    startApp();
-}
+
+startApp();
+
 
 /*    --------------------------------------------------- *\
         Global vars
@@ -76,10 +82,22 @@ var cam: any;
         Return: nil
 \*    --------------------------------------------------- */
 function startApp(){
+
+    Render.add("assets/spriter/walking.png");
+    Render.add("assets/spriter/walking_pingouin.png");
+    Render.add("assets/spriter/jump_pingouin.png");
+    Render.add("assets/background.jpg");
+    Render.add("assets/hole_sprite.png");
+    Render.add("assets/ice.png");
+    Render.add("assets/iceberg1_sprite.png");
+    Render.add("assets/iceberg2_sprite.png");
+    Render.add("assets/iceberg3_sprite.png");
+
     Render.ready(() => {
         world = new p2.World({
-            gravity: [0, 10]
+            gravity: [0, 7300]
         });
+        world.defaultContactMaterial.friction = 0;
 
         Update.world(world);
         scene = new Scene();
@@ -89,22 +107,44 @@ function startApp(){
         Render.setCamera(cam);
 
         console.log("Starting game...");
-        Render.getCamera().setPosition(0, 0);
 
-        var myGround = new Ground(world);
-        myGround.setPosition(-250, 0);
-
+        /*    --------------------------------------------------- *\
+                Create player element
+        \*    --------------------------------------------------- */
         var player = new Player(world);
         player.setPosition(0, -100 );
-
-        mainCanvas.set(myGround);
-        mainCanvas.set(player);
-
         playerBehaviour.setPlayer(player);
         playerBehaviour.active();
+        mainCanvas.set(player);
+        Render.getCamera().setPosition(0, 0);
 
-        Render.setDebugMode(true);
+        Background.active();
 
+        /*    --------------------------------------------------- *\
+                Map loading
+        \*    --------------------------------------------------- */
+        MapLoading.loadMap("learning");
+        MapLoading.whenLoaded(() => {
+            player.drawables[0].setFreeze(false);
+            player.setPosition(0, -100);
+            console.log("START NOW");
+
+            player.setDepth(1000);
+            mainCanvas.set(player);
+
+            player.resetLocalStats();
+            ScoreBehaviour.resetScore();
+
+            playerBehaviour.enableControls(true);
+            playerBehaviour.enableMoving(true);
+
+            /*    --------------------------------------------------- *\
+                    Camera behaviour
+            \*    --------------------------------------------------- */
+            cameraBehaviour.setCamera(cam);
+            cameraBehaviour.follow(player);
+            cameraBehaviour.active();
+        });
 
 
         /*    --------------------------------------------------- *\
@@ -114,11 +154,13 @@ function startApp(){
         // total elements
         var totalElements = new Render.Draw.Text(10, 10, "Total elements: null", 200, 50);
         totalElements.setColor("#FFFFFF");
+        totalElements.setFixed(true);
         interfaceCanvas.set(totalElements);
 
         // fps
         var fps = new Render.Draw.Text(10, 30, "FPS: null", 200, 50);
         fps.setColor("#FFFFFF");
+        fps.setFixed(true);
         interfaceCanvas.set(fps);
         var previousTime = 0;
         var currentTime = 0;

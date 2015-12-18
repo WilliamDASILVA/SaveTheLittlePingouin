@@ -3,6 +3,17 @@
 \*	--------------------------------------------------- */
 module Global{
 
+    /*    --------------------------------------------------- *\
+            [function] getScreenSize()
+    
+            * Return the screen size *
+    
+            Return: screenX, screenY
+    \*    --------------------------------------------------- */
+    export function getScreenSize(){
+        return { width: window.innerWidth, height: window.innerHeight };
+    }
+
 	/*	--------------------------------------------------- *\
 			[function] getDistanceBetween2Points(xA, xB, yA, yB)
 	
