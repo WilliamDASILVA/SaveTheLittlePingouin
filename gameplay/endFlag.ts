@@ -10,12 +10,14 @@ class EndFlag extends Elements{
 		var texture = new Render.Texture("assets/end.png");
 		var sprite = new Render.Sprite(texture, 0, 0, 180,180, 64,64, 4, 0);
 		sprite.setFrameSpeed(12);
-		sprite.setOffset(0, -120);
+		sprite.setOffset(0, -50);
 		this.assignDrawable(sprite);
 
 		var shape = new p2.Box({ width: 180, height: 180 });
 		this.addShape(shape);
 		this.shapes[0].sensor = true;
+
+		this.setDepth(4);
 
 
 		if(world){

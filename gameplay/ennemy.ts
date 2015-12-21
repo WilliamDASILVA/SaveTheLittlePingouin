@@ -16,12 +16,14 @@ class Ennemy extends Elements{
 		var texture = new Render.Texture("assets/spriter/ennemy.png");
 		var sprite = new Render.Sprite(texture, 0, 0, 200,188, 83, 78, 20, 0);
 		sprite.setFrameSpeed(60);
-		sprite.setOffset(0, -150);
+		sprite.setOffset(0, -60);
 		this.assignDrawable(sprite);
 
 		if(world ){
 			world.addBody(this);
 		}
+
+		this.setDepth(2);
 
 		_ennemies.push(this);
 

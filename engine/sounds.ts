@@ -64,6 +64,10 @@ module Sounds{
 					this.isReady = true;
 					this.emit("ready");
 				});
+
+				this.element.addEventListener("ended", () => {
+					this.emit("end");
+				});
 			}
 
 			this.path = path;

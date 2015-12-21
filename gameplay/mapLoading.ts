@@ -2,6 +2,16 @@ module MapLoading{
 	var functionToCallWhenLoaded = null;
 	var mapElements = [];
 	var nextMap = "";
+	var playerElement = null;
+	var mapSize = null;
+
+	export function getMapSize(){
+		return mapSize;
+	}
+
+	export function setPlayer(player : any){
+		playerElement = player;
+	}
 
 	export function destroyMap(functionWhenDone : any){
 		for (var i = mapElements.length - 1; i >= 0; i--) {
@@ -12,6 +22,7 @@ module MapLoading{
 		mapElements = [];
 
 		functionWhenDone();
+		mainCanvas.del(playerElement);
 	}
 
 	export function getNextMap(){
@@ -37,12 +48,7 @@ module MapLoading{
 	function generateMap(mapData:any){
 		var data = mapData.elements;
 
-		var mapSize = mapData.size;
-
-		var ground = new Ground(world, mapSize);
-		ground.setPosition(-1000, 0);
-		mapElements.push(ground);
-		mainCanvas.set(ground);
+		mapSize = mapData.size;
 
 		// elements
 		var maxPoints = 0;
@@ -73,6 +79,8 @@ module MapLoading{
 		}
 
 		ScoreBehaviour.setMaxPoints(maxPoints);
+		GameInterface.updateValue("score_label", "0 / " + maxPoints);
+		GameInterface.updateValue("score_label_shadow", "0 / " + maxPoints);
 
 		functionToCallWhenLoaded();
 	}

@@ -20,7 +20,7 @@ class Obstacle extends Elements{
 		texture = new Render.Texture("assets/hole_sprite.png");
 		drawable = new Render.Sprite(texture, 0, 0, 150, 150, 64, 64, 5, 0);
 		drawable.setFrameSpeed(5);
-		drawable.setOffset(0, -50);
+		drawable.setOffset(-42, 50);
 
 		this.setDepth(9);
 		this.assignDrawable(drawable);

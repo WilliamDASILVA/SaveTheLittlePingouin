@@ -21,7 +21,7 @@ module cameraBehaviour{
 		if((currentCamera != null) && (followTarget != null) && (isActive)){
 			var screenSize = Global.getScreenSize();
 			var position = followTarget.getPosition();
-			currentCamera.setPosition(position.x + screenSize.width / 2 - 100, position.y);
+			currentCamera.setPosition(position.x + screenSize.width / 2 - 100, 0);
 		}
 	}
 }

@@ -3,6 +3,11 @@ module playerBehaviour{
 	var isMoving = false;
 	var canJump = true;
 	var haveControls = false;
+	var splashSound = new Sounds.Sound("assets/sounds/splash.mp3");
+	var jumpSound = new Sounds.Sound("assets/sounds/jump.ogg");
+	var joySound = new Sounds.Sound("assets/sounds/joy.ogg");
+	var victorySound = new Sounds.Sound("assets/sounds/win.mp3");
+
 
 	export function setPlayer(player : any){
 		currentPlayer = player;
@@ -20,15 +25,29 @@ module playerBehaviour{
 		Update.on(movePlayer);
 
 		var screenSize = Global.getScreenSize();
-		var touchJump = new Input.Touch(0,0, screenSize.width/2);
+		var touchJump = new Input.Touch(32 , screenSize.height / 2-80 + 32, 160,160);
 		touchJump.on("press", doJump);
-		var touchPunch = new Input.Touch(screenSize.width/2,0 ,  screenSize.width/2);
+		var touchPunch = new Input.Touch(screenSize.width - 32 - 160, screenSize.height / 2-80 + 32, 160, 160);
 		touchPunch.on("press", doPunch);
 
 		world.on("beginContact", (event) => {
 			for (var i = _obstacles.length - 1; i >= 0; i--) {
 				if((event.bodyA == currentPlayer || event.bodyB == currentPlayer ) && (event.bodyA == _obstacles[i] || event.bodyB == _obstacles[i])) {
-					currentPlayer.takeHealth(10);
+					currentPlayer.takeHealth(1);
+					splashSound.play();
+
+					currentPlayer.drawables[0].setFreeze(true);
+
+					enableControls(false);
+					enableMoving(false);
+					currentPlayer.velocity[0] = 0;
+					currentPlayer.velocity[1] = 0;
+
+					setTimeout(() => {
+						currentPlayer.drawables[0].setFreeze(false);
+						enableControls(true);
+						enableMoving(true);
+					}, 2000);
 				}
 			}
 			/*for (var i = _ennemies.length - 1; i >= 0; i--) {
@@ -46,13 +65,40 @@ module playerBehaviour{
 
 					currentPlayer.drawables[0].setFreeze(true);
 
+					// Start the pingouins party
+					if(ScoreBehaviour.getPoints() != 0){
+						victorySound.play();
+					}
+
+					// Pingouins party
+					var pingouins = [];
+					var texture = new Render.Texture("assets/pingouin_jump.png");
+
+					var playerPosition = currentPlayer.getPosition();
+
+					for (var p = 0; p < ScoreBehaviour.getPoints(); ++p) {
+						var sprite = new Render.Sprite(texture, 0, 0, 64, 64, 64, 64, 10, 0);
+						sprite.setFrameSpeed(12);
+						sprite.setFixed(true);
+						sprite.setDepth(100);
+						var screenPosition = Global.getPositionFromWorld(playerPosition.x, playerPosition.y, Render.getCamera()); 
+						sprite.setPosition(screenPosition.x + Global.getRandom(100, 300), screenPosition.y + Global.getRandom(80, 200));
+						pingouins.push(sprite);
+
+						mainCanvas.set(sprite);
+					}
+
+
 					console.log(currentPlayer.getHealth());
 					console.log("POINTS:", ScoreBehaviour.getPoints()+"/"+ScoreBehaviour.getTotalPoints());
 
 					setTimeout(() => {
+						for (var i = 0; i < pingouins.length; ++i) {
+							mainCanvas.del(pingouins[i]);
+						}
+
 						MapLoading.destroyMap(() => {
-							console.log("NEXT MAP:", MapLoading.getNextMap());
-							MapLoading.loadMap("dead");
+							MapLoading.loadMap(MapLoading.getNextMap());
 						});
 
 					}, 3000);
@@ -73,10 +119,14 @@ module playerBehaviour{
 					if(position.x > playerPosition.x){
 						var texture = new Render.Texture("assets/ennemy2.png");
 						var sprite = new Render.Drawable(texture, 0, 0, 200,188);
-						sprite.setOffset(0, -150);
+						sprite.setOffset(0, -60);
 						_ennemies[i].drawables[0] = sprite;
 
+						joySound.play();
+
 						ScoreBehaviour.givePoint();
+						GameInterface.updateValue("score_label", ScoreBehaviour.getPoints() + " / " + ScoreBehaviour.getTotalPoints());
+						GameInterface.updateValue("score_label_shadow", ScoreBehaviour.getPoints() + " / " + ScoreBehaviour.getTotalPoints());
 					} 
 				}
 			}
@@ -85,10 +135,12 @@ module playerBehaviour{
 
 	function doJump(){
 		if(canJump && haveControls){
+			jumpSound.play();
 			currentPlayer.velocity[1] = -2000;
 			canJump = false;
 			setTimeout(() => {
 				canJump = true;
+
 			}, 1000);
 		}
 	}

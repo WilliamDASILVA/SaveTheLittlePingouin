@@ -41,6 +41,10 @@
 /// <reference path="../gameplay/endFlag.ts" />
 /// <reference path="../gameplay/mapLoading.ts" />
 /// <reference path="../gameplay/background.ts" />
+/// <reference path="../gameplay/iceberg.ts" />
+
+/// <reference path="../interface/game.ts" />
+/// <reference path="../interface/score.ts" />
 
 /// <reference path="../gameplay/behaviours/playerBehaviour.ts" />
 /// <reference path="../gameplay/behaviours/cameraBehaviour.ts" />
@@ -55,6 +59,7 @@ var mainCanvas = new Render.Layer();
 mainCanvas.setSmooth(false);
 mainCanvas.affectedByCamera = true;
 var interfaceCanvas = new Render.Layer();
+interfaceCanvas.setSmooth(false);
 /*    --------------------------------------------------- *\
         Main file
 \*    --------------------------------------------------- */
@@ -108,6 +113,20 @@ function startApp(){
 
         console.log("Starting game...");
 
+        var windSound = new Sounds.Sound("assets/sounds/wind.mp3");
+        windSound.setVolume(0.5);
+        windSound.on("ready", () => {
+            windSound.play();
+            windSound.on("end", () => {
+                windSound.stop();
+                windSound.play();
+            });
+        });
+
+        //Render.setDebugMode(true);
+
+        new Fonts.FontFace("pixelated", "assets/Pixeltype.ttf");
+
         /*    --------------------------------------------------- *\
                 Create player element
         \*    --------------------------------------------------- */
@@ -115,21 +134,36 @@ function startApp(){
         player.setPosition(0, -100 );
         playerBehaviour.setPlayer(player);
         playerBehaviour.active();
-        mainCanvas.set(player);
         Render.getCamera().setPosition(0, 0);
 
         Background.active();
+        MapLoading.setPlayer(player);
+
+        var ground = new Ground(world, 10000);
+        ground.setPosition(-1000, 0);
+        mainCanvas.set(ground);
+
+
+        GameInterface.create();
+        ScoreInterface.create();
+
+
+        GameInterface.setVisible(false);
 
         /*    --------------------------------------------------- *\
                 Map loading
         \*    --------------------------------------------------- */
         MapLoading.loadMap("learning");
         MapLoading.whenLoaded(() => {
+
+            ground.setSize(500, MapLoading.getMapSize());
+
             player.drawables[0].setFreeze(false);
             player.setPosition(0, -100);
             console.log("START NOW");
 
             player.setDepth(1000);
+            mainCanvas.del(player);
             mainCanvas.set(player);
 
             player.resetLocalStats();
@@ -151,7 +185,7 @@ function startApp(){
                 Debug informations
         \*    --------------------------------------------------- */
         
-        // total elements
+        /*// total elements
         var totalElements = new Render.Draw.Text(10, 10, "Total elements: null", 200, 50);
         totalElements.setColor("#FFFFFF");
         totalElements.setFixed(true);
@@ -178,7 +212,7 @@ function startApp(){
         setInterval(() => {
             fps.setValue("FPS: " + lastFPS);
         }, 250);
-        updateFPS();
+        updateFPS();*/
 
     });
     Render.download();
