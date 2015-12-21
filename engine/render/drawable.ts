@@ -22,6 +22,8 @@ module Render{
         layout: any;
         smooth: boolean;
         offset: any;
+        haveCrop: boolean;
+        crop: any;
 
 		/*	--------------------------------------------------- *\
 				[function] constructor(texture, x, y, width, height)
@@ -59,6 +61,42 @@ module Render{
             this.visible = true;
             this.smooth = true;
             this.offset = { x: 0, y: 0 };
+            this.haveCrop = false;
+            this.crop = { x: 0, y: 0, width: this.size.width, height: this.size.height };
+		}
+
+		/*	--------------------------------------------------- *\
+				[function] isCropped()
+		
+				* Check if the element is cropped *
+		
+				Return: true, false
+		\*	--------------------------------------------------- */
+		isCropped(){
+			return this.haveCrop;
+		}
+
+		/*	--------------------------------------------------- *\
+				[function] setCrop(x,y, width, height)
+		
+				* Set the crop area *
+		
+				Return: nil
+		\*	--------------------------------------------------- */
+		setCrop(x : number, y : number, width : number, height : number){
+			this.haveCrop = true;
+			this.crop = { x: x, y: y, width: width, height: height };
+		}
+
+		/*	--------------------------------------------------- *\
+				[function] getCrop()
+		
+				* Return the crop area *
+		
+				Return: crop
+		\*	--------------------------------------------------- */
+		getCrop(){
+			return this.crop;
 		}
 
 		/*	--------------------------------------------------- *\

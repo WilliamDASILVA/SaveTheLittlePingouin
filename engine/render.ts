@@ -579,7 +579,14 @@ module Render{
 							context.drawImage(elementToDraw.getData(), Math.ceil(frameSize.width * currentFrame), Math.ceil(frameSize.height * frameLine), Math.ceil(frameSize.width), Math.ceil(frameSize.height), Math.ceil(futurPosition.x), Math.ceil(futurPosition.y), Math.ceil(size.width), Math.ceil(size.height));
 						}
 						else {
-							context.drawImage(elementToDraw.getData(), Math.ceil(futurPosition.x), Math.ceil(futurPosition.y), Math.ceil(size.width), Math.ceil(size.height));
+							var cropArea = null;
+							if(elementToDraw.isCropped()){
+								cropArea = elementToDraw.getCrop();
+							}
+							else{
+								cropArea = { x: 0, y: 0, width: elementToDraw.getData().width, height: elementToDraw.getData().height};
+							}
+							context.drawImage(elementToDraw.getData(), cropArea.x, cropArea.y, cropArea.width, cropArea.height, Math.ceil(futurPosition.x), Math.ceil(futurPosition.y), Math.ceil(size.width), Math.ceil(size.height));
 						}
 					}
 
