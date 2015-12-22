@@ -4,6 +4,7 @@ module MapLoading{
 	var nextMap = "";
 	var playerElement = null;
 	var mapSize = null;
+	var currentMap = "";
 
 	export function getMapSize(){
 		return mapSize;
@@ -29,8 +30,13 @@ module MapLoading{
 		return nextMap;
 	}
 
+	export function getCurrentMap(){
+		return currentMap;
+	}
+
 	export function loadMap(name : string){
 		var xhr = new Global.XHR("maps/" + name + ".json");
+		currentMap = name;
 		xhr.ready((response) => {
 			if(response.readyState == 4){
 				var mapData = JSON.parse(response.response);
@@ -39,6 +45,7 @@ module MapLoading{
 					generateMap(mapData);
 				}
 				else{
+					currentMap = "";
 					alert("Couldn't load map... Data error.");
 				}
 			}

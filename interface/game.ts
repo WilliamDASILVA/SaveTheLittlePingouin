@@ -44,6 +44,7 @@ module GameInterface{
 		elements['score_label_shadow'].setColor("#000000");
 		elements['score_label_shadow'].setOpacity(0.2);
 		elements['score_label_shadow'].setFixed(true);
+		
 		elements['score_label'] = new Render.Draw.Text(screenSize.width - 128, 32, "10/20", 200, 10);
 		elements['score_label'].setFontSize(45);
 		elements['score_label'].setFont("pixelated");

@@ -145,10 +145,8 @@ function startApp(){
 
 
         GameInterface.create();
-        ScoreInterface.create();
-
-
-        GameInterface.setVisible(false);
+        ScoreInterface.setActive();
+        
 
         /*    --------------------------------------------------- *\
                 Map loading
@@ -178,6 +176,8 @@ function startApp(){
             cameraBehaviour.setCamera(cam);
             cameraBehaviour.follow(player);
             cameraBehaviour.active();
+
+            GameInterface.setVisible(true);
         });
 
 

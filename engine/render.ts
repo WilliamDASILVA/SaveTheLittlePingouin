@@ -557,7 +557,9 @@ module Render{
 							context.closePath();
 							break;
 					}
-					context.fill();
+					if(elementToDraw.getShape() != "text"){
+						context.fill();
+					}
 					if (elementToDraw.getStrokeSize() != 0) {
 						context.stroke();
 					}

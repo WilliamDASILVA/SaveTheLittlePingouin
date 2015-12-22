@@ -57,6 +57,7 @@ module playerBehaviour{
 			}*/
 			for (var i = _endFlags.length - 1; i >= 0; i--) {
 				if((event.bodyA == currentPlayer || event.bodyB == currentPlayer ) && (event.bodyA == _endFlags[i] || event.bodyB == _endFlags[i])) {
+					var time = 0;
 					enableControls(false);
 					enableMoving(false);
 
@@ -68,6 +69,7 @@ module playerBehaviour{
 					// Start the pingouins party
 					if(ScoreBehaviour.getPoints() != 0){
 						victorySound.play();
+						time = 3000;
 					}
 
 					// Pingouins party
@@ -89,19 +91,35 @@ module playerBehaviour{
 					}
 
 
+					// Show scoreboard after the party
+					setTimeout(() => {
+						// destroy pingouins
+						for (var i = 0; i < pingouins.length; ++i) {
+							mainCanvas.del(pingouins[i]);
+						}
+						
+						ScoreInterface.setMax(ScoreBehaviour.getTotalPoints());
+						ScoreInterface.setScore(ScoreBehaviour.getPoints());
+						ScoreInterface.create();
+						ScoreInterface.enableControls(true);
+						playerBehaviour.enableControls(false);
+						GameInterface.setVisible(false);
+
+
+					}, 0);
+
+
+/*
 					console.log(currentPlayer.getHealth());
 					console.log("POINTS:", ScoreBehaviour.getPoints()+"/"+ScoreBehaviour.getTotalPoints());
 
 					setTimeout(() => {
-						for (var i = 0; i < pingouins.length; ++i) {
-							mainCanvas.del(pingouins[i]);
-						}
 
 						MapLoading.destroyMap(() => {
 							MapLoading.loadMap(MapLoading.getNextMap());
 						});
 
-					}, 3000);
+					}, 3000);*/
 				}
 			}
 
