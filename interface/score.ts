@@ -7,6 +7,8 @@ module ScoreInterface{
 	var currentScore = 0;
 	var currentMax = 0;
 
+	var haveNextButton = true;
+
 	export function enableControls(value){
 		haveControls = value;
 	}
@@ -15,6 +17,10 @@ module ScoreInterface{
 		for (var element in elements) {
 			interfaceCanvas.del(elements[element]);
 		}
+	}
+
+	export function canDoNextLevel(value){
+		haveNextButton = value;
 	}
 
 	export function setActive() {
@@ -32,7 +38,7 @@ module ScoreInterface{
 		});
 		var nextButton = new Input.Touch(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 25, 150, 50);
 		nextButton.on("press", () => {
-			if(haveControls){
+			if (haveControls && haveNextButton){
 				console.log("NEXT");
 				destroy();
 				enableControls(false);
@@ -95,16 +101,23 @@ module ScoreInterface{
 		elements['button_retry_text'].setAlign("center");
 		elements['button_retry_text'].setFixed(true);
 
-		elements['button_nextlevel'] = new Render.Draw.Rectangle(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 25, 150, 50);
-		elements['button_nextlevel'].setColor("#DFDFDF");
-		elements['button_nextlevel'].setFixed(true);
+		if (haveNextButton){
+			elements['button_nextlevel'] = new Render.Draw.Rectangle(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 25, 150, 50);
+			elements['button_nextlevel'].setColor("#DFDFDF");
+			elements['button_nextlevel'].setFixed(true);
 
-		elements['button_nextlevel_text'] = new Render.Draw.Text(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 8, "Next level", 150, 10);
-		elements['button_nextlevel_text'].setFontSize(25);
-		elements['button_nextlevel_text'].setFont("pixelated");
-		elements['button_nextlevel_text'].setColor("#000000");
-		elements['button_nextlevel_text'].setAlign("center");
-		elements['button_nextlevel_text'].setFixed(true);
+			var nextText = "Next level";
+			if (MapLoading.getNextMap() == "end"){
+				nextText = "Main menu";
+			}
+
+			elements['button_nextlevel_text'] = new Render.Draw.Text(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 8, nextText, 150, 10);
+			elements['button_nextlevel_text'].setFontSize(25);
+			elements['button_nextlevel_text'].setFont("pixelated");
+			elements['button_nextlevel_text'].setColor("#000000");
+			elements['button_nextlevel_text'].setAlign("center");
+			elements['button_nextlevel_text'].setFixed(true);
+		}
 
 		elements['score_background'] = new Render.Draw.Circle(screenSize.width / 2, screenSize.height / 2 - 48, 48);
 		elements['score_background'].setFixed(true);

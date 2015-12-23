@@ -36,7 +36,7 @@ class Player extends Elements{
 			this.health = 0;
 			GameInterface.updateValue("health", 0.01);
 		}
-		else{
+		else {
 			this.health = this.health - value;
 			GameInterface.updateValue("health", this.health);
 		}

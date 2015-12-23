@@ -56,7 +56,7 @@ module Update{
 
         // call update functions
         for (var i = functionsToCallWhenUpdate.length - 1; i >= 0; i--) {
-			functionsToCallWhenUpdate[i]();
+			functionsToCallWhenUpdate[i](t);
         }
         
         var dt = t !== undefined && lastTime !== undefined ? t / 1000 - lastTime : 0;

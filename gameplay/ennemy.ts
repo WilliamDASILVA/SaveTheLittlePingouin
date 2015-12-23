@@ -1,6 +1,9 @@
 var _ennemies = [];
 
 class Ennemy extends Elements{
+
+	hasBeenCaptured: boolean;
+
 	constructor(world : any){
 		super(0);
 
@@ -12,6 +15,8 @@ class Ennemy extends Elements{
 		var shape = new p2.Box({width : 200, height : 188});
 		this.addShape(shape);
 		this.shapes[0].sensor = true;
+
+		this.hasBeenCaptured = false;
 
 		var texture = new Render.Texture("assets/spriter/ennemy.png");
 		var sprite = new Render.Sprite(texture, 0, 0, 200,188, 83, 78, 20, 0);
@@ -27,6 +32,15 @@ class Ennemy extends Elements{
 
 		_ennemies.push(this);
 
+	}
+
+	
+	isCaptured(){
+		return this.hasBeenCaptured;
+	}
+
+	setCaptured(value:boolean){
+		this.hasBeenCaptured = value;
 	}
 
 	destroy(){

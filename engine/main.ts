@@ -45,10 +45,14 @@
 
 /// <reference path="../interface/game.ts" />
 /// <reference path="../interface/score.ts" />
+/// <reference path="../interface/starting.ts" />
+/// <reference path="../interface/menu.ts" />
+/// <reference path="../interface/level.ts" />
 
 /// <reference path="../gameplay/behaviours/playerBehaviour.ts" />
 /// <reference path="../gameplay/behaviours/cameraBehaviour.ts" />
 /// <reference path="../gameplay/behaviours/scoreBehaviour.ts" />
+/// <reference path="../gameplay/behaviours/snowBehaviour.ts" />
 
 
 
@@ -123,6 +127,16 @@ function startApp(){
             });
         });
 
+        var mainSound = new Sounds.Sound("assets/sounds/howareyou.mp3");
+        mainSound.setVolume(0.1);
+        mainSound.on("ready", () => {
+            mainSound.play();
+            mainSound.on("end", () => {
+                mainSound.stop();
+                mainSound.play();
+            });
+        });
+
         //Render.setDebugMode(true);
 
         new Fonts.FontFace("pixelated", "assets/Pixeltype.ttf");
@@ -132,6 +146,7 @@ function startApp(){
         \*    --------------------------------------------------- */
         var player = new Player(world);
         player.setPosition(0, -100 );
+        player.drawables[0].setFreeze(true);
         playerBehaviour.setPlayer(player);
         playerBehaviour.active();
         Render.getCamera().setPosition(0, 0);
@@ -139,24 +154,32 @@ function startApp(){
         Background.active();
         MapLoading.setPlayer(player);
 
-        var ground = new Ground(world, 10000);
+        var ground = new Ground(world, 500000000);
         ground.setPosition(-1000, 0);
         mainCanvas.set(ground);
 
 
+
+
         GameInterface.create();
+        GameInterface.setVisible(false);
         ScoreInterface.setActive();
-        
+
+        snowBehaviour.create();
+        snowBehaviour.setActive();
+
+        LevelInterface.create();
+       /* MenuInterface.setActive();
+        MenuInterface.create();*/
 
         /*    --------------------------------------------------- *\
                 Map loading
         \*    --------------------------------------------------- */
-        MapLoading.loadMap("learning");
+        //MapLoading.loadMap("learning");
         MapLoading.whenLoaded(() => {
-
+            player.drawables[0].setFreeze(true);
             ground.setSize(500, MapLoading.getMapSize());
 
-            player.drawables[0].setFreeze(false);
             player.setPosition(0, -100);
             console.log("START NOW");
 
@@ -167,8 +190,19 @@ function startApp(){
             player.resetLocalStats();
             ScoreBehaviour.resetScore();
 
-            playerBehaviour.enableControls(true);
-            playerBehaviour.enableMoving(true);
+            StartingInterface.updateTitle(MapLoading.getMapName());
+            StartingInterface.create();
+
+            setTimeout(() => {
+                StartingInterface.destroy();
+                GameInterface.setVisible(true);
+
+                setTimeout(() => {
+                    player.drawables[0].setFreeze(false);
+                    playerBehaviour.enableControls(true);
+                    playerBehaviour.enableMoving(true);
+                }, 500);
+            }, 3000);
 
             /*    --------------------------------------------------- *\
                     Camera behaviour
@@ -177,7 +211,6 @@ function startApp(){
             cameraBehaviour.follow(player);
             cameraBehaviour.active();
 
-            GameInterface.setVisible(true);
         });
 
 

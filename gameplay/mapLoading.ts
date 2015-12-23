@@ -5,6 +5,7 @@ module MapLoading{
 	var playerElement = null;
 	var mapSize = null;
 	var currentMap = "";
+	var mapName = "";
 
 	export function getMapSize(){
 		return mapSize;
@@ -52,10 +53,15 @@ module MapLoading{
 		});
 	}
 
+	export function getMapName(){
+		return mapName;
+	}
+
 	function generateMap(mapData:any){
 		var data = mapData.elements;
 
 		mapSize = mapData.size;
+		mapName = mapData.name;
 
 		// elements
 		var maxPoints = 0;
