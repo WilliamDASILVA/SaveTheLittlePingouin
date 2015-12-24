@@ -10,10 +10,13 @@ module MenuInterface{
 
 	export function setActive(){
 		var screenSize = Global.getScreenSize();
-		var buttonTouch = new Input.Touch(screenSize.width - 300 - 40, screenSize.height - (300 / 1.6) - 40, 300, 300 / 1.6);
-		buttonTouch.on("press", () => {
+		var startButton = new Input.Touch(screenSize.width - 300 - 40,screenSize.height - (300/1.6) - 40, 300, 300/1.6);
+		startButton.on("press", () => {
 			if(controlsEnabled){
-				console.log("START THE FIRST MAP..");
+				destroy();
+				LevelInterface.create();
+				LevelInterface.enableControls(true);
+				enableControls(false);
 			}
 		});
 	}

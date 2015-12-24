@@ -1,58 +1,24 @@
-/// <reference path="p2.d.ts" />
-/// <reference path="tween.d.ts" />
+/// <reference path="engine.d.ts" />
 
-/// <reference path="global.ts" />
-/// <reference path="events.ts" />
-/// <reference path="elements.ts" />
-/// <reference path="scene.ts" />
-/// <reference path="camera.ts" />
-/// <reference path="input.ts" />
-/// <reference path="update.ts" />
+/// <reference path="gameplay/ground.ts" />
+/// <reference path="gameplay/player.ts" />
+/// <reference path="gameplay/obstacle.ts" />
+/// <reference path="gameplay/ennemy.ts" />
+/// <reference path="gameplay/endFlag.ts" />
+/// <reference path="gameplay/mapLoading.ts" />
+/// <reference path="gameplay/background.ts" />
+/// <reference path="gameplay/iceberg.ts" />
 
-/// <reference path="render.ts" />
-/// <reference path="render/layer.ts" />
-/// <reference path="render/texture.ts" />
-/// <reference path="render/drawable.ts" />
-/// <reference path="render/sprite.ts" />
-/// <reference path="render/draw/draw.ts" />
-/// <reference path="render/draw/rectangle.ts" />
-/// <reference path="render/draw/circle.ts" />
-/// <reference path="render/draw/polygon.ts" />
-/// <reference path="render/draw/line.ts" />
-/// <reference path="render/draw/text.ts" />
-/// <reference path="render/draw/point.ts" />
+/// <reference path="interface/game.ts" />
+/// <reference path="interface/score.ts" />
+/// <reference path="interface/starting.ts" />
+/// <reference path="interface/menu.ts" />
+/// <reference path="interface/level.ts" />
 
-/// <reference path="grid.ts" />
-/// <reference path="interface.ts" />
-/// <reference path="ui/gui.ts" />
-/// <reference path="ui/window.ts" />
-/// <reference path="ui/label.ts" />
-/// <reference path="ui/button.ts" />
-/// <reference path="ui/field.ts" />
-/// <reference path="ui/checkbox.ts" />
-
-/// <reference path="sounds.ts" />
-/// <reference path="fonts.ts" />
-
-/// <reference path="../gameplay/ground.ts" />
-/// <reference path="../gameplay/player.ts" />
-/// <reference path="../gameplay/obstacle.ts" />
-/// <reference path="../gameplay/ennemy.ts" />
-/// <reference path="../gameplay/endFlag.ts" />
-/// <reference path="../gameplay/mapLoading.ts" />
-/// <reference path="../gameplay/background.ts" />
-/// <reference path="../gameplay/iceberg.ts" />
-
-/// <reference path="../interface/game.ts" />
-/// <reference path="../interface/score.ts" />
-/// <reference path="../interface/starting.ts" />
-/// <reference path="../interface/menu.ts" />
-/// <reference path="../interface/level.ts" />
-
-/// <reference path="../gameplay/behaviours/playerBehaviour.ts" />
-/// <reference path="../gameplay/behaviours/cameraBehaviour.ts" />
-/// <reference path="../gameplay/behaviours/scoreBehaviour.ts" />
-/// <reference path="../gameplay/behaviours/snowBehaviour.ts" />
+/// <reference path="gameplay/behaviours/playerBehaviour.ts" />
+/// <reference path="gameplay/behaviours/cameraBehaviour.ts" />
+/// <reference path="gameplay/behaviours/scoreBehaviour.ts" />
+/// <reference path="gameplay/behaviours/snowBehaviour.ts" />
 
 
 
@@ -76,7 +42,7 @@ startApp();
 \*    --------------------------------------------------- */
 var sX = window.innerWidth,
     sY = window.innerHeight;
-var ratio = sX/sY;
+var ratio = sX / sY;
 
 var world: any;
 var scene: any;
@@ -90,7 +56,7 @@ var cam: any;
 
         Return: nil
 \*    --------------------------------------------------- */
-function startApp(){
+function startApp() {
 
     Render.add("assets/spriter/walking.png");
     Render.add("assets/spriter/walking_pingouin.png");
@@ -145,7 +111,7 @@ function startApp(){
                 Create player element
         \*    --------------------------------------------------- */
         var player = new Player(world);
-        player.setPosition(0, -100 );
+        player.setPosition(0, -100);
         player.drawables[0].setFreeze(true);
         playerBehaviour.setPlayer(player);
         playerBehaviour.active();
@@ -168,9 +134,10 @@ function startApp(){
         snowBehaviour.create();
         snowBehaviour.setActive();
 
-        LevelInterface.create();
-       /* MenuInterface.setActive();
-        MenuInterface.create();*/
+        LevelInterface.setActive();
+        MenuInterface.setActive();
+        MenuInterface.enableControls(true);
+        MenuInterface.create();
 
         /*    --------------------------------------------------- *\
                 Map loading

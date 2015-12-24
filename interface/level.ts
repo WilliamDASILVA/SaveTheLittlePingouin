@@ -14,12 +14,16 @@ module LevelInterface{
 		var backButton = new Input.Touch(10, 10, 150, 150 / 2.25);
 		backButton.on("press", () => {
 			if(controlsEnabled){
-				console.log("START THE FIRST MAP..");
+				destroy();
+				MenuInterface.create();
+				MenuInterface.enableControls(true);
+				enableControls(false);
 			}
 		});
 	}
 
 	export function create(){
+		islands = 0;
 		var screenSize = Global.getScreenSize();
 
 		elements['background'] = new Render.Draw.Rectangle(0, 0, screenSize.width, screenSize.height);
@@ -38,12 +42,12 @@ module LevelInterface{
 		elements['label'].setColor("#FFFFFF");
 		elements['label'].setFixed(true);
 
-		createIsland(10, 95, 2, "Learning", false);
-		createIsland(200, 95, 0, "My darling...", true);
-		createIsland(410, 95, 0, "You're my first love...", true);
-		createIsland(10, 250, 0, "Stay with me...", true);
-		createIsland(200, 250, 0, "I need you.", true);
-		createIsland(410, 250, 0, "I love you.", true);
+		createIsland(10, 95, 2, "Learning", false, "learning");
+		createIsland(200, 95, 0, "My darling...", true, "level1");
+		createIsland(410, 95, 0, "You're my first love...", true, "level2");
+		createIsland(10, 250, 0, "Stay with me...", true, "level3");
+		createIsland(200, 250, 0, "I need you.", true, "level4");
+		createIsland(410, 250, 0, "I love you.", true, "level5");
 
 
 		for (var element in elements) {
@@ -51,7 +55,7 @@ module LevelInterface{
 		}
 	}
 
-	function createIsland(x : number, y : number, stars : number, title : string, locked : boolean){
+	function createIsland(x: number, y: number, stars: number, title: string, locked: boolean, mapToCall: string){
 		islands++;
 		elements['background' + islands] = new Render.Drawable(new Render.Texture("assets/menu_item.png"), x, y, 130, 130/1.3);
 		elements['background' + islands].setFixed(true);
