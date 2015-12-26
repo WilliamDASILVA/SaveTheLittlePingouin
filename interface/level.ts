@@ -1,11 +1,12 @@
 module LevelInterface{
 	var elements = [];
 	var touchAreas = [];
-	var controlsEnabled = true;
+	var controlsEnabled = false;
 	var islands = 0;
+	var errorSound = new Sounds.Sound("assets/sounds/error.ogg");
+	var okSound = new Sounds.Sound("assets/sounds/ok.ogg");
 
-
-	export function enableControls(value){
+	export function enableControls(value) {
 		controlsEnabled = value;
 	}
 
@@ -18,6 +19,33 @@ module LevelInterface{
 				MenuInterface.create();
 				MenuInterface.enableControls(true);
 				enableControls(false);
+				okSound.play();	
+			}
+		});
+
+		touchAreas['learning'] = { x: 10, y: 95, calling : "learning", can : SaveData.getData("learning").can};
+		touchAreas['darling'] = { x: 200, y: 95, calling: "level1", can: SaveData.getData("level1").can};
+		touchAreas['firstlove'] = { x: 410, y: 95, calling: "level2", can: SaveData.getData("level2").can};
+		touchAreas['staywithme'] = { x: 10, y: 250, calling: "level3", can: SaveData.getData("level3").can};
+		touchAreas['needyou'] = { x: 200, y: 250, calling: "level4", can: SaveData.getData("level4").can};
+		touchAreas['loveyou'] = { x: 410, y: 250, calling: "level5", can: SaveData.getData("level5").can};
+
+		var touchArea = new Input.Touch(0, 0, screenSize.width, screenSize.height);
+		touchArea.on("press", (x, y) => {
+			if(controlsEnabled){
+				for (var area in touchAreas) {
+					if(x >= touchAreas[area].x && y >= touchAreas[area].y && x <= touchAreas[area].x + 130 && y <= touchAreas[area].y + 130){
+						if(touchAreas[area].can){
+							MapLoading.loadMap(touchAreas[area].calling);
+							destroy();
+							enableControls(false);
+							okSound.play();
+						}
+						else{
+							errorSound.play();
+						}
+					}
+				}
 			}
 		});
 	}
@@ -42,12 +70,12 @@ module LevelInterface{
 		elements['label'].setColor("#FFFFFF");
 		elements['label'].setFixed(true);
 
-		createIsland(10, 95, 2, "Learning", false, "learning");
-		createIsland(200, 95, 0, "My darling...", true, "level1");
-		createIsland(410, 95, 0, "You're my first love...", true, "level2");
-		createIsland(10, 250, 0, "Stay with me...", true, "level3");
-		createIsland(200, 250, 0, "I need you.", true, "level4");
-		createIsland(410, 250, 0, "I love you.", true, "level5");
+		createIsland(10, 95, SaveData.getData("learning").stars, "Learning", (!SaveData.getData("learning").can));
+		createIsland(200, 95, SaveData.getData("level1").stars, "Level 1", (!SaveData.getData("level1").can));
+		createIsland(410, 95, SaveData.getData("level2").stars, "Level 2", (!SaveData.getData("level2").can));
+		createIsland(10, 250, SaveData.getData("level3").stars, "Level 3", (!SaveData.getData("level3").can));
+		createIsland(200, 250, SaveData.getData("level4").stars, "Level 4", (!SaveData.getData("level4").can));
+		createIsland(410, 250, SaveData.getData("level5").stars, "Level 5", (!SaveData.getData("level5").can));
 
 
 		for (var element in elements) {
@@ -55,7 +83,7 @@ module LevelInterface{
 		}
 	}
 
-	function createIsland(x: number, y: number, stars: number, title: string, locked: boolean, mapToCall: string){
+	function createIsland(x: number, y: number, stars: number, title: string, locked: boolean){
 		islands++;
 		elements['background' + islands] = new Render.Drawable(new Render.Texture("assets/menu_item.png"), x, y, 130, 130/1.3);
 		elements['background' + islands].setFixed(true);
@@ -78,7 +106,6 @@ module LevelInterface{
 		}
 		else{
 			elements['star2' + islands] = new Render.Drawable(new Render.Texture("assets/star_disabled.png"), x + 45, y, 40,40);
-
 		}
 		if(stars == 3){
 			elements['star3' + islands] = new Render.Drawable(new Render.Texture("assets/star_active.png"), x+90, y, 40,40);
@@ -86,7 +113,6 @@ module LevelInterface{
 		}
 		else{
 			elements['star3' + islands] = new Render.Drawable(new Render.Texture("assets/star_disabled.png"), x+90, y, 40,40);
-			
 		}
 
 		elements['star1' + islands].setFixed(true);

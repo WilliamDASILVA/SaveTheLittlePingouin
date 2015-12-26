@@ -8,6 +8,7 @@
 /// <reference path="gameplay/mapLoading.ts" />
 /// <reference path="gameplay/background.ts" />
 /// <reference path="gameplay/iceberg.ts" />
+/// <reference path="gameplay/saveData.ts" />
 
 /// <reference path="interface/game.ts" />
 /// <reference path="interface/score.ts" />
@@ -124,6 +125,10 @@ function startApp() {
         ground.setPosition(-1000, 0);
         mainCanvas.set(ground);
 
+        /*    --------------------------------------------------- *\
+                Getting data
+        \*    --------------------------------------------------- */
+        SaveData.loadData();
 
 
 
@@ -138,6 +143,7 @@ function startApp() {
         MenuInterface.setActive();
         MenuInterface.enableControls(true);
         MenuInterface.create();
+
 
         /*    --------------------------------------------------- *\
                 Map loading

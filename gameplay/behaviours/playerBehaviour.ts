@@ -122,6 +122,26 @@ module playerBehaviour{
                         if(pourcentage < 80){
                             ScoreInterface.canDoNextLevel(false);
                         }
+                        else{
+                            ScoreInterface.canDoNextLevel(true);
+                            SaveData.setData(MapLoading.getNextMap(), "can", true);
+                        }
+
+                        // Save stats
+                        SaveData.setData(MapLoading.getCurrentMap(), "can", true);
+                        SaveData.setData(MapLoading.getCurrentMap(), "done", true);
+                        var stars = 0;
+                        if(pourcentage >= 50){
+                            stars = 1;
+                        }
+                        if(pourcentage >= 80){
+                            stars = 2;
+                        }
+                        if(pourcentage == 100){
+                            stars = 3;
+                        }
+                        SaveData.setData(MapLoading.getCurrentMap(), "stars", stars);
+                        SaveData.saveData();
                         
                         ScoreInterface.setMax(ScoreBehaviour.getTotalPoints());
                         ScoreInterface.setScore(ScoreBehaviour.getPoints());

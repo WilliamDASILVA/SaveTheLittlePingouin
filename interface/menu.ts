@@ -2,9 +2,10 @@ module MenuInterface{
 
 	var elements = [];
 	var controlsEnabled = true;
+	var okSound = new Sounds.Sound("assets/sounds/ok.ogg");
 
 
-	export function enableControls(value){
+	export function enableControls(value) {
 		controlsEnabled = value;
 	}
 
@@ -17,6 +18,7 @@ module MenuInterface{
 				LevelInterface.create();
 				LevelInterface.enableControls(true);
 				enableControls(false);
+				okSound.play();
 			}
 		});
 	}
