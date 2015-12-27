@@ -51,6 +51,13 @@ module LevelInterface{
 	}
 
 	export function create(){
+		touchAreas['learning'] = { x: 10, y: 95, calling : "learning", can : SaveData.getData("learning").can};
+		touchAreas['darling'] = { x: 200, y: 95, calling: "level1", can: SaveData.getData("level1").can};
+		touchAreas['firstlove'] = { x: 410, y: 95, calling: "level2", can: SaveData.getData("level2").can};
+		touchAreas['staywithme'] = { x: 10, y: 250, calling: "level3", can: SaveData.getData("level3").can};
+		touchAreas['needyou'] = { x: 200, y: 250, calling: "level4", can: SaveData.getData("level4").can};
+		touchAreas['loveyou'] = { x: 410, y: 250, calling: "level5", can: SaveData.getData("level5").can};
+
 		islands = 0;
 		var screenSize = Global.getScreenSize();
 
@@ -119,15 +126,19 @@ module LevelInterface{
 		elements['star2' + islands].setFixed(true);
 		elements['star3' + islands].setFixed(true);
 
-		if(locked){
+		elements['lock' + islands] = new Render.Drawable(new Render.Texture("assets/lock.png"), x + 65 - 15, y + 20, 30, 40);
+		elements['lock' + islands].setFixed(true);
 
+		if(locked){
 			elements['star1' + islands].setOpacity(0.32);
 			elements['star2' + islands].setOpacity(0.32);
 			elements['star3' + islands].setOpacity(0.32);
 			elements['background' + islands].setOpacity(0.32);
 			elements['title' + islands].setOpacity(0.32);
-			elements['lock' + islands] = new Render.Drawable(new Render.Texture("assets/lock.png"), x + 65 - 15, y + 20, 30, 40);
-			elements['lock' + islands].setFixed(true);
+			elements['lock' + islands].setVisible(true);
+		}
+		else{
+			elements['lock' + islands].setVisible(false);
 		}
 	}
 

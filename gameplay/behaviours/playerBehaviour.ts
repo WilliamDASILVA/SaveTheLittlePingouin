@@ -123,8 +123,10 @@ module playerBehaviour{
                             ScoreInterface.canDoNextLevel(false);
                         }
                         else{
-                            ScoreInterface.canDoNextLevel(true);
-                            SaveData.setData(MapLoading.getNextMap(), "can", true);
+                            if(MapLoading.getNextMap() != "end"){
+                                ScoreInterface.canDoNextLevel(true);
+                                SaveData.setData(MapLoading.getNextMap(), "can", true);
+                            }
                         }
 
                         // Save stats
@@ -140,7 +142,11 @@ module playerBehaviour{
                         if(pourcentage == 100){
                             stars = 3;
                         }
-                        SaveData.setData(MapLoading.getCurrentMap(), "stars", stars);
+
+                        var currentStars = SaveData.getData(MapLoading.getCurrentMap()).stars;
+                        if(stars > currentStars){
+                            SaveData.setData(MapLoading.getCurrentMap(), "stars", stars);
+                        }
                         SaveData.saveData();
                         
                         ScoreInterface.setMax(ScoreBehaviour.getTotalPoints());

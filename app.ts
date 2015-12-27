@@ -15,6 +15,7 @@
 /// <reference path="interface/starting.ts" />
 /// <reference path="interface/menu.ts" />
 /// <reference path="interface/level.ts" />
+/// <reference path="interface/final.ts" />
 
 /// <reference path="gameplay/behaviours/playerBehaviour.ts" />
 /// <reference path="gameplay/behaviours/cameraBehaviour.ts" />
@@ -143,6 +144,8 @@ function startApp() {
         MenuInterface.setActive();
         MenuInterface.enableControls(true);
         MenuInterface.create();
+
+        FinalInterface.setActive();
 
 
         /*    --------------------------------------------------- *\

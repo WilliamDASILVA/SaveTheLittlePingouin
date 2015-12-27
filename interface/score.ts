@@ -28,7 +28,6 @@ module ScoreInterface{
 		var retryButton = new Input.Touch(screenSize.width / 2 - 150 - 75, (screenSize.height - 130) - 25, 150, 50);
 		retryButton.on("press", () => {
 			if(haveControls){
-				console.log("RETRY");
 				destroy();
 				enableControls(false);
 				MapLoading.destroyMap(() => {
@@ -39,16 +38,35 @@ module ScoreInterface{
 		var nextButton = new Input.Touch(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 25, 150, 50);
 		nextButton.on("press", () => {
 			if (haveControls && haveNextButton){
-				console.log("NEXT");
+				destroy();
+				enableControls(false);
+				if (MapLoading.getNextMap() == "end") {
+					MapLoading.destroyMap(() => {
+						FinalInterface.create();
+						FinalInterface.enableControls(true);
+					});
+				}
+				else{
+					MapLoading.destroyMap(() => {
+						MapLoading.loadMap(MapLoading.getNextMap());
+					});
+				}
+			}
+		});
+		var goMenuButton = new Input.Touch(screenSize.width / 2 - 75, (screenSize.height - 80), 150, 50);
+		goMenuButton.on("press", () => {
+			if (haveControls){
 				destroy();
 				enableControls(false);
 				MapLoading.destroyMap(() => {
-					MapLoading.loadMap(MapLoading.getNextMap());
+			    	MenuInterface.create();
+					setTimeout(() => {
+						MenuInterface.enableControls(true);
+					}, 1000);
 				});
 			}
 		});
 	}
-
 	export function create(){
 		var screenSize = Global.getScreenSize();
 
@@ -88,11 +106,21 @@ module ScoreInterface{
 		elements['right_star'] = new Render.Drawable(thirdStar, screenSize.width / 2 + 150 - 48, screenSize.height / 2 - (screenSize.height - 150) / 2 - 48, 96, 96);
 		elements['right_star'].setFixed(true);
 
+		elements['button_home'] = new Render.Draw.Rectangle(screenSize.width / 2 - 75, (screenSize.height - 80), 150, 50);
+		elements['button_home'].setColor("#DFDFDF");
+		elements['button_home'].setFixed(true);
 
+		elements['button_home_text'] = new Render.Draw.Text(screenSize.width / 2 - 75, (screenSize.height - 75), "Go to main menu", 150, 10);
+		elements['button_home_text'].setFontSize(25);
+		elements['button_home_text'].setFont("pixelated");
+		elements['button_home_text'].setColor("#000000");
+		elements['button_home_text'].setAlign("center");
+		elements['button_home_text'].setFixed(true);
 
 		elements['button_retry'] = new Render.Draw.Rectangle(screenSize.width / 2 - 150 - 75, (screenSize.height - 130) - 25, 150, 50);
 		elements['button_retry'].setColor("#DFDFDF");
 		elements['button_retry'].setFixed(true);
+
 
 		elements['button_retry_text'] = new Render.Draw.Text(screenSize.width / 2 - 150 - 75 - 75, (screenSize.height - 130) - 8, "Retry this level", 300, 10);
 		elements['button_retry_text'].setFontSize(25);
@@ -108,7 +136,7 @@ module ScoreInterface{
 
 			var nextText = "Next level";
 			if (MapLoading.getNextMap() == "end"){
-				nextText = "Main menu";
+				nextText = "Finish";
 			}
 
 			elements['button_nextlevel_text'] = new Render.Draw.Text(screenSize.width / 2 + 150 - 75, (screenSize.height - 130) - 8, nextText, 150, 10);
