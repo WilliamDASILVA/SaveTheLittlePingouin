@@ -12,6 +12,7 @@ module StartingInterface{
 		
 		elements['background'] = new Render.Drawable(new Render.Texture("assets/shadow.png"), 0, 0, 720, 155);
 		elements['background'].setFixed(true);
+		elements['background'].setDepth(0);
 		elements['background'].setPosition(0, screenSize.height - 100);
 		elements['background'].setSize(screenSize.width, 155);
 
@@ -20,12 +21,14 @@ module StartingInterface{
 		elements['label'].setFont("pixelated");
 		elements['label'].setColor("#FFFFFF");
 		elements['label'].setFixed(true);
+		elements['label'].setDepth(1);
 
 		elements['title'] = new Render.Draw.Text(20, screenSize.height - 100 + 45, lastTitle, 750, 10);
 		elements['title'].setFontSize(40);
 		elements['title'].setFont("pixelated");
 		elements['title'].setColor("#FFFFFF");
 		elements['title'].setFixed(true);
+		elements['title'].setDepth(1);
 
 		for (var element in elements) {
 			interfaceCanvas.set(elements[element]);
