@@ -1,0 +1,7 @@
+{
+	"name" : "Learn",
+	"size" : 50000,
+	"elements" : [
+		["end", 50000, 0, "level1"]
+	]
+}
